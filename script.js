@@ -1,14 +1,21 @@
+document.getElementById("btn").addEventListener("click", convert);
+
 function convert() {
   let original = document.getElementById("input").value;
   let text = original;
 
-  // ✅ ① 刪除語氣詞
+  if (!text) {
+    document.getElementById("output").innerText = "請輸入文字也";
+    return;
+  }
+
+  // ✅ ① 刪語氣詞
   text = text.replace(/[嗎呢啦啊喔欸吧]/g, "");
 
   // 👉 刪句尾「了」
-  text = text.replace(/了$/g, "");
+  text = text.replace(/了$/, "");
 
-  // ✅ ② 字典（順序很重要）
+  // ✅ ② 字典（用 replace + regex，穩）
   const dict = [
     ["非常", "極"],
     ["喜歡", "喜"],
@@ -27,17 +34,18 @@ function convert() {
     ["去", "往"]
   ];
 
-  dict.forEach(([key, value]) => {
-    text = text.replaceAll(key, value);
+  dict.forEach(pair => {
+    let key = pair[0];
+    let value = pair[1];
+    let reg = new RegExp(key, "g");
+    text = text.replace(reg, value);
   });
 
-  // ✅ ③ 簡單句型優化
+  // ✅ ③ 簡單優化
   text = text.replace(/甚(.*?)的/g, "甚$1");
-
-  // 去空格
   text = text.replace(/\s+/g, "");
 
-  // ✅ ④ 判斷語氣
+  // ✅ ④ 語氣詞
   let ending = "也";
 
   if (original.includes("嗎") || original.includes("？")) {
@@ -53,15 +61,14 @@ function convert() {
   typeEffect(text);
 }
 
-// 🔥 打字動畫
 function typeEffect(text) {
   let output = document.getElementById("output");
   output.innerText = "";
   let i = 0;
 
   let timer = setInterval(() => {
-    output.innerText += text[i];
+    output.innerText += text.charAt(i);
     i++;
     if (i >= text.length) clearInterval(timer);
-  }, 50);
+  }, 40);
 }
