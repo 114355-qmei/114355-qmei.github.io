@@ -1,76 +1,68 @@
 body {
-  background: url("https://www.transparenttextures.com/patterns/rice-paper.png");
-  font-family: "KaiTi", serif;
-  text-align: center;
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+    color: white;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-.container {
-  margin-top: 60px;
-}
-
+/* 標題 */
 h1 {
-  font-size: 42px;
-  color: #4b2e1e;
-  letter-spacing: 5px;
+    margin-bottom: 40px;
+    font-size: 28px;
+    transition: 0.3s;
 }
 
-.subtitle {
-  color: #6b4a2b;
-  margin-bottom: 20px;
-}
-
-textarea {
-  width: 60%;
-  height: 120px;
-  padding: 15px;
-
-  border: 2px solid #8b5e3c;
-  background: rgba(255, 255, 255, 0.7);
-
-  font-size: 16px;
-}
-
-/* 🔥 Q彈按鈕 */
+/* 按鈕 */
 button {
-  margin-top: 20px;
-  padding: 12px 28px;
-  background: #8b5e3c;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-
-  border-radius: 10px;
-
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 5px 0 #5c3b23;
+    padding: 18px 36px;
+    font-size: 18px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #ff4b5c, #ff6b81);
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s;
 }
 
+/* Q彈 */
 button:hover {
-  transform: scale(1.08);
+    transform: scale(1.15);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
 }
 
+/* 點擊壓下 */
 button:active {
-  transform: scale(0.95);
-  box-shadow: 0 2px 0 #5c3b23;
+    transform: scale(0.95);
 }
 
-#output {
-  margin-top: 30px;
-  font-size: 22px;
-  color: #3b2a1a;
-
-  padding: 15px;
-  display: inline-block;
-
-  border-bottom: 2px solid #8b5e3c;
+/* 畫面震動 */
+.shake {
+    animation: shake 0.4s;
 }
 
-/* 印章 */
-.seal {
-  color: red;
-  border: 2px solid red;
-  display: inline-block;
-  padding: 5px;
-  margin-top: 20px;
+@keyframes shake {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(-10px,5px); }
+    50% { transform: translate(10px,-5px); }
+    75% { transform: translate(-10px,5px); }
+    100% { transform: translate(0,0); }
+}
+
+/* glitch 效果 */
+.glitch {
+    animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+    0% { text-shadow: 2px 0 red; }
+    50% { text-shadow: -2px 0 blue; }
+    100% { text-shadow: 2px 0 red; }
 }
