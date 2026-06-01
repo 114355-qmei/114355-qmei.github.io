@@ -4,54 +4,7 @@
 <meta charset="UTF-8">
 <title>不要點這個按鈕</title>
 
-<style>
-    body {
-        margin: 0;
-        height: 100vh;
-        background: #f5f5dc;
-        font-family: "Noto Serif TC", serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
-    h1 {
-        margin-bottom: 30px;
-        color: #5a3e2b;
-    }
-
-    button {
-        padding: 20px 40px;
-        font-size: 20px;
-        border: none;
-        border-radius: 12px;
-        background: #8b5e3c;
-        color: white;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        position: absolute;
-    }
-
-    /* Q彈效果 */
-    button:hover {
-        transform: scale(1.1);
-    }
-
-    .shake {
-        animation: shake 0.3s;
-    }
-
-    @keyframes shake {
-        0% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        50% { transform: translateX(5px); }
-        75% { transform: translateX(-5px); }
-        100% { transform: translateX(0); }
-    }
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -59,77 +12,8 @@
 <h1 id="title">不要點這個按鈕</h1>
 <button id="btn">不要點我</button>
 
-<script>
-let btn = document.getElementById("btn");
-let title = document.getElementById("title");
-let count = 0;
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
 
-function moveButton() {
-    let x = Math.random() * (window.innerWidth - 150);
-    let y = Math.random() * (window.innerHeight - 80);
-    btn.style.left = x + "px";
-    btn.style.top = y + "px";
-}
-
-btn.addEventListener("click", () => {
-    count++;
-
-    btn.classList.add("shake");
-    setTimeout(() => btn.classList.remove("shake"), 300);
-
-    // 不同階段反應
-    if (count === 1) {
-        title.innerText = "欸...不是說不要點嗎 😑";
-    } 
-    else if (count === 2) {
-        title.innerText = "你很故意欸 🤨";
-    } 
-    else if (count === 3) {
-        title.innerText = "好啦你再點試試看";
-        moveButton();
-    } 
-    else if (count === 4) {
-        title.innerText = "抓不到吧 😏";
-        moveButton();
-    } 
-    else if (count === 5) {
-        title.innerText = "你是不是很閒 🤡";
-        moveButton();
-        document.body.style.background = "#ffe4e1";
-    } 
-    else if (count === 6) {
-        title.innerText = "我開始生氣了 😡";
-        btn.style.transform = "scale(1.3)";
-    } 
-    else if (count === 7) {
-        title.innerText = "最後警告 ⚠️";
-        moveButton();
-    } 
-    else if (count === 8) {
-        title.innerText = "好，你完了";
-        document.body.style.background = "black";
-        title.style.color = "red";
-    } 
-    else if (count === 9) {
-        title.innerText = "😈😈😈";
-        btn.innerText = "還敢點？";
-        moveButton();
-    } 
-    else if (count >= 10) {
-        title.innerText = "已經停不下來了吧 😂";
-        moveButton();
-
-        // 複製按鈕（混亂）
-        let newBtn = btn.cloneNode(true);
-        newBtn.style.left = Math.random() * window.innerWidth + "px";
-        newBtn.style.top = Math.random() * window.innerHeight + "px";
-        document.body.appendChild(newBtn);
-    }
-});
-
-// 初始位置
-moveButton();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
