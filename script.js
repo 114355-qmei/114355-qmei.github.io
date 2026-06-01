@@ -1,10 +1,11 @@
+window.onload = function() {
+
 let btn = document.getElementById("btn");
 let title = document.getElementById("title");
 let sound = document.getElementById("clickSound");
 
 let count = 0;
 
-/* 隨機移動 */
 function move(btnElement) {
     let x = Math.random() * (window.innerWidth - 150);
     let y = Math.random() * (window.innerHeight - 80);
@@ -12,7 +13,6 @@ function move(btnElement) {
     btnElement.style.top = y + "px";
 }
 
-/* 滑鼠靠近逃跑 */
 document.addEventListener("mousemove", (e) => {
     let rect = btn.getBoundingClientRect();
     let dx = e.clientX - (rect.left + rect.width/2);
@@ -24,8 +24,7 @@ document.addEventListener("mousemove", (e) => {
     }
 });
 
-/* 點擊事件 */
-btn.addEventListener("click", () => {
+function handleClick() {
     count++;
     sound.currentTime = 0;
     sound.play();
@@ -69,11 +68,15 @@ btn.addEventListener("click", () => {
         title.innerText = "停不下來了吧 😏";
 
         let newBtn = btn.cloneNode(true);
-        newBtn.onclick = btn.onclick;
+        newBtn.addEventListener("click", handleClick);
+
         move(newBtn);
         document.body.appendChild(newBtn);
     }
-});
+}
 
-/* 初始位置 */
+btn.addEventListener("click", handleClick);
+
 move(btn);
+
+}
