@@ -1,6 +1,13 @@
 function convert() {
   let text = document.getElementById("input").value;
 
+  // ✅ ① 清除白話語氣詞
+  const particles = ["嗎", "呢", "啦", "啊", "喔", "欸", "吧"];
+  particles.forEach(p => {
+    text = text.replaceAll(p, "");
+  });
+
+  // ✅ ② 字典翻譯
   const dict = {
     "我": "吾",
     "你": "汝",
@@ -12,39 +19,39 @@ function convert() {
     "吃": "食",
     "喝": "飲",
     "去": "往",
-    "來": "來",
     "今天": "今日",
     "明天": "明日",
-    "不": "不",
-    "沒有": "無"
+    "沒有": "無",
+    "真的": "誠",
+    "可以": "可"
   };
 
-  // 字典替換
   for (let key in dict) {
     text = text.replaceAll(key, dict[key]);
   }
 
-  // 簡單句型調整（很 + 形容詞 → 甚 + 形容詞）
+  // ✅ ③ 簡單句型優化
   text = text.replace(/甚(.*?)的/g, "甚$1");
 
-  // 加語氣詞
-  const endings = ["也", "矣", "焉"];
-  let ending = endings[Math.floor(Math.random() * endings.length)];
+  // （可選）移除多餘空格
+  text = text.replace(/\s+/g, "");
+
+  // ✅ ④ 加文言語氣詞（判斷句型）
+  const questionWords = ["何", "安", "誰", "孰", "豈"];
+
+  let ending = "也"; // 預設
+
+  // 如果原句有問句語氣（例如有「？」或「嗎」）
+  if (document.getElementById("input").value.includes("嗎") ||
+      document.getElementById("input").value.includes("？")) {
+    ending = "乎";
+  } else {
+    const endings = ["也", "矣", "焉"];
+    ending = endings[Math.floor(Math.random() * endings.length)];
+  }
 
   text += ending;
 
+  // ✅ ⑤ 打字動畫
   typeEffect(text);
-}
-
-// 打字動畫
-function typeEffect(text) {
-  let output = document.getElementById("output");
-  output.innerText = "";
-  let i = 0;
-
-  let timer = setInterval(() => {
-    output.innerText += text[i];
-    i++;
-    if (i >= text.length) clearInterval(timer);
-  }, 50);
 }
