@@ -5,6 +5,7 @@ let sound = document.getElementById("clickSound");
 
 let count = 0;
 let canMove = false;
+let freeze = false; // ✅ 新增：控制是否停止躲避
 
 /* 延遲 */
 function getDelay() {
@@ -31,7 +32,7 @@ function move(btn) {
     btn.style.top = y + "px";
 }
 
-/* 👉 核心：點擊邏輯變函式 */
+/* 點擊邏輯 */
 function handleClick(e) {
     let btn = e.target;
 
@@ -45,7 +46,7 @@ function handleClick(e) {
         document.body.classList.remove("shake");
     }, 300);
 
-    if (count >= 3) pauseMove();
+    if (count >= 3 && !freeze) pauseMove();
 
     if (count === 1) {
         title.innerText = "欸？不是說不要點嗎 😑";
@@ -84,9 +85,9 @@ function handleClick(e) {
     else if (count >= 9) {
         title.innerText = "停不下來了吧 😂";
 
-        let newBtn = btn.cloneNode(true);
+        freeze = true; // ✅ 關閉所有躲避
 
-        // ✅ 關鍵：重新綁事件
+        let newBtn = btn.cloneNode(true);
         newBtn.addEventListener("click", handleClick);
 
         document.body.appendChild(newBtn);
@@ -101,7 +102,8 @@ move(firstBtn);
 
 /* 滑鼠靠近 */
 document.addEventListener("mousemove", (e) => {
-    if (!canMove || count < 3) return;
+    // ✅ 加上 freeze 判斷
+    if (!canMove || count < 3 || freeze) return;
 
     let buttons = document.querySelectorAll("button");
 
