@@ -5,7 +5,8 @@ let sound = document.getElementById("clickSound");
 
 let count = 0;
 let canMove = false;
-let freeze = false; // ✅ 新增：控制是否停止躲避
+let freeze = false;
+let isBroken = false;
 
 /* 延遲 */
 function getDelay() {
@@ -85,14 +86,55 @@ function handleClick(e) {
     else if (count >= 9) {
         title.innerText = "停不下來了吧 😂";
 
-        freeze = true; // ✅ 關閉所有躲避
+        freeze = true; // 不再躲
 
         let newBtn = btn.cloneNode(true);
         newBtn.addEventListener("click", handleClick);
 
         document.body.appendChild(newBtn);
         move(newBtn);
+
+        // ✅ 檢查是否達到 32 顆
+        let totalBtns = document.querySelectorAll("button").length;
+        if (totalBtns >= 32 && !isBroken) {
+            breakGame();
+        }
     }
+}
+
+/* 崩壞模式 💀 */
+function breakGame() {
+    isBroken = true;
+
+    title.innerText = "系統錯誤…正在崩壞…";
+
+    // 畫面旋轉抖動
+    setInterval(() => {
+        document.body.style.transform =
+            "rotate(" + (Math.random() * 10 - 5) + "deg) scale(" + (1 + Math.random() * 0.2) + ")";
+    }, 100);
+
+    // 背景閃爍
+    setInterval(() => {
+        document.body.style.background =
+            Math.random() > 0.5 ? "black" : "red";
+    }, 80);
+
+    // 按鈕亂飛
+    let buttons = document.querySelectorAll("button");
+    buttons.forEach(btn => {
+        setInterval(() => {
+            let x = Math.random() * window.innerWidth;
+            let y = Math.random() * window.innerHeight;
+            btn.style.left = x + "px";
+            btn.style.top = y + "px";
+        }, 200);
+    });
+
+    // 最終文字
+    setTimeout(() => {
+        title.innerText = "你把網站玩壞了 💀";
+    }, 3000);
 }
 
 /* 初始按鈕 */
@@ -102,7 +144,6 @@ move(firstBtn);
 
 /* 滑鼠靠近 */
 document.addEventListener("mousemove", (e) => {
-    // ✅ 加上 freeze 判斷
     if (!canMove || count < 3 || freeze) return;
 
     let buttons = document.querySelectorAll("button");
