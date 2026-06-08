@@ -39,8 +39,10 @@ function handleClick(e) {
 
     count++;
 
-    sound.currentTime = 0;
-    sound.play();
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play();
+    }
 
     document.body.classList.add("shake");
     setTimeout(() => {
@@ -64,6 +66,7 @@ function handleClick(e) {
 
         let newBtn = btn.cloneNode(true);
         newBtn.addEventListener("click", handleClick);
+
         document.body.appendChild(newBtn);
         move(newBtn);
 
@@ -74,81 +77,68 @@ function handleClick(e) {
     }
 }
 
-/* 💀 最終崩壞 */
+/* 💀 安全崩壞（有限動畫，不當機） */
 function breakGame() {
     isBroken = true;
     freeze = true;
 
-    title.innerText = "ERROR";
+    title.innerText = "系統錯誤...";
 
-    // 顏色閃爍
-    setInterval(() => {
-        let colors = ["black", "red", "white"];
-        let bg = colors[Math.floor(Math.random()*colors.length)];
-        document.body.style.background = bg;
-        document.body.style.color = (bg === "white") ? "black" : "red";
-    }, 60);
+    let start = Date.now();
+    let duration = 5000; // 崩壞 5 秒
 
-    // 旋轉 + 縮放
-    setInterval(() => {
-        document.body.style.transform =
-            "rotate(" + (Math.random()*360) + "deg) scale(" + (0.8 + Math.random()*0.6) + ")";
-    }, 120);
+    let interval = setInterval(() => {
+        let t = Date.now() - start;
 
-    // 抖動
-    setInterval(() => {
-        document.body.style.transform +=
-            " translate("+(Math.random()*50-25)+"px,"+(Math.random()*50-25)+"px)";
-    }, 80);
-
-    // 亂碼
-    setInterval(() => {
-        let chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&?!";
-        let text="";
-        for(let i=0;i<12;i++){
-            text+=chars[Math.floor(Math.random()*chars.length)];
+        // 停止條件
+        if (t > duration) {
+            clearInterval(interval);
+            document.body.style.transform = "";
+            document.body.style.background = "black";
+            title.innerText = "你把它玩壞了 💀";
+            return;
         }
-        title.innerText=text;
-    },100);
 
-    // 無限生成按鈕
-    setInterval(() => {
-        let btn=document.createElement("button");
-        btn.innerText="不要點";
-        btn.addEventListener("click", handleClick);
+        // 顏色閃爍（溫和版）
+        document.body.style.background =
+            (Math.random() > 0.5) ? "black" : "#220000";
 
-        document.body.appendChild(btn);
+        // 輕微旋轉 + 縮放
+        let rotate = Math.random() * 10 - 5;
+        let scale = 1 + Math.random() * 0.1;
 
-        btn.style.position="absolute";
-        btn.style.left=Math.random()*window.innerWidth+"px";
-        btn.style.top=Math.random()*window.innerHeight+"px";
-    },150);
-
-    // 滑鼠干擾
-    document.addEventListener("mousemove", (e)=>{
         document.body.style.transform =
-            "rotate("+(e.clientX%360)+"deg) scale("+(1+(e.clientY%100)/300)+")";
-    });
+            "rotate(" + rotate + "deg) scale(" + scale + ")";
+
+        // 文字亂碼（短）
+        let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+        let text = "";
+        for (let i = 0; i < 6; i++) {
+            text += chars[Math.floor(Math.random() * chars.length)];
+        }
+        title.innerText = text;
+
+    }, 100);
 }
 
 /* 初始按鈕 */
-let firstBtn=document.getElementById("btn");
+let firstBtn = document.getElementById("btn");
 firstBtn.addEventListener("click", handleClick);
 move(firstBtn);
 
 /* 滑鼠躲避 */
-document.addEventListener("mousemove",(e)=>{
-    if(!canMove||count<3||freeze)return;
+document.addEventListener("mousemove", (e) => {
+    if (!canMove || count < 3 || freeze) return;
 
-    let buttons=document.querySelectorAll("button");
+    let buttons = document.querySelectorAll("button");
 
-    buttons.forEach(btn=>{
-        let rect=btn.getBoundingClientRect();
-        let dx=e.clientX-(rect.left+rect.width/2);
-        let dy=e.clientY-(rect.top+rect.height/2);
-        let dist=Math.sqrt(dx*dx+dy*dy);
+    buttons.forEach(btn => {
+        let rect = btn.getBoundingClientRect();
+        let dx = e.clientX - (rect.left + rect.width / 2);
+        let dy = e.clientY - (rect.top + rect.height / 2);
+        let dist = Math.sqrt(dx * dx + dy * dy);
 
-        if(dist<120){
+        if (dist < 120) {
             move(btn);
         }
     });
