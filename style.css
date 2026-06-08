@@ -1,68 +1,89 @@
+/* 基本設定 */
 body {
     margin: 0;
+    padding: 0;
+    overflow: hidden; /* 防止滾動 */
     height: 100vh;
-    background: linear-gradient(135deg, #1e1e2f, #2b2b45);
-    color: white;
-    font-family: "Segoe UI", sans-serif;
+
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    overflow: hidden;
+    align-items: flex-start;
+
+    background: #111;
+    color: white;
+    font-family: "Courier New", monospace;
+
+    transition: all 0.2s;
 }
 
 /* 標題 */
-h1 {
-    margin-bottom: 40px;
-    font-size: 28px;
-    transition: 0.3s;
+#title {
+    margin-top: 100px;
+    font-size: 42px;
+    letter-spacing: 3px;
+    text-align: center;
+    z-index: 10;
 }
 
 /* 按鈕 */
 button {
-    padding: 18px 36px;
-    font-size: 18px;
-    border: none;
-    border-radius: 14px;
-    background: linear-gradient(145deg, #ff4b5c, #ff6b81);
-    color: white;
-    cursor: pointer;
     position: absolute;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    transition: transform 0.15s ease, box-shadow 0.15s;
+
+    padding: 15px 25px;
+    font-size: 18px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: linear-gradient(145deg, #ff4d4d, #cc0000);
+    color: white;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+    transition: 
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.2s;
 }
 
-/* Q彈 */
+/* Hover效果（滑鼠靠近） */
 button:hover {
-    transform: scale(1.15);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
-/* 點擊壓下 */
+/* 點擊感 */
 button:active {
     transform: scale(0.95);
 }
 
-/* 畫面震動 */
+/* 抖動動畫 */
 .shake {
-    animation: shake 0.4s;
+    animation: shake 0.3s;
 }
 
 @keyframes shake {
-    0% { transform: translate(0,0); }
-    25% { transform: translate(-10px,5px); }
-    50% { transform: translate(10px,-5px); }
-    75% { transform: translate(-10px,5px); }
-    100% { transform: translate(0,0); }
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-5px, 5px); }
+    50% { transform: translate(5px, -5px); }
+    75% { transform: translate(-5px, -5px); }
+    100% { transform: translate(0, 0); }
 }
 
-/* glitch 效果 */
-.glitch {
-    animation: glitch 0.3s infinite;
+/* 💀 恐怖氛圍（JS 會切換） */
+body.horror {
+    background: black;
+    color: red;
 }
 
-@keyframes glitch {
-    0% { text-shadow: 2px 0 red; }
-    50% { text-shadow: -2px 0 blue; }
-    100% { text-shadow: 2px 0 red; }
+/* 讓文字有壓迫感 */
+body.horror #title {
+    text-shadow: 0 0 10px red, 0 0 20px darkred;
+}
+
+/* 畫面抖動加強 */
+body.horror.shake {
+    animation: shake 0.1s infinite;
 }
