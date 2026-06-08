@@ -33,7 +33,7 @@ function move(btn) {
     btn.style.top = y + "px";
 }
 
-/* 點擊邏輯 */
+/* 點擊 */
 function handleClick(e) {
     let btn = e.target;
 
@@ -49,40 +49,14 @@ function handleClick(e) {
 
     if (count >= 3 && !freeze) pauseMove();
 
-    if (count === 1) {
-        title.innerText = "欸？不是說不要點嗎 😑";
-    }
-    else if (count === 2) {
-        title.innerText = "你很故意欸 🤨";
-        move(btn);
-    }
-    else if (count === 3) {
-        title.innerText = "我開始躲了，但還會讓你 😏";
-        move(btn);
-    }
-    else if (count === 4) {
-        title.innerText = "機會變少囉 👀";
-        move(btn);
-    }
-    else if (count === 5) {
-        title.innerText = "你是不是快不行了 🤡";
-        document.body.style.background = "#3a1c1c";
-        move(btn);
-    }
-    else if (count === 6) {
-        title.innerText = "難度↑ 😈";
-        btn.style.transform = "scale(1.3)";
-        move(btn);
-    }
-    else if (count === 7) {
-        title.innerText = "最後機會 ⚠️";
-        move(btn);
-    }
-    else if (count === 8) {
-        title.innerText = "好，你完了 😈";
-        document.body.style.background = "black";
-        move(btn);
-    }
+    if (count === 1) title.innerText = "欸？不是說不要點嗎 😑";
+    else if (count === 2) { title.innerText = "你很故意欸 🤨"; move(btn); }
+    else if (count === 3) { title.innerText = "我開始躲了，但還會讓你 😏"; move(btn); }
+    else if (count === 4) { title.innerText = "機會變少囉 👀"; move(btn); }
+    else if (count === 5) { title.innerText = "你是不是快不行了 🤡"; document.body.style.background="#3a1c1c"; move(btn); }
+    else if (count === 6) { title.innerText = "難度↑ 😈"; btn.style.transform="scale(1.3)"; move(btn); }
+    else if (count === 7) { title.innerText = "最後機會 ⚠️"; move(btn); }
+    else if (count === 8) { title.innerText = "好，你完了 😈"; document.body.style.background="black"; move(btn); }
     else if (count >= 9) {
         title.innerText = "停不下來了吧 😂";
 
@@ -90,7 +64,6 @@ function handleClick(e) {
 
         let newBtn = btn.cloneNode(true);
         newBtn.addEventListener("click", handleClick);
-
         document.body.appendChild(newBtn);
         move(newBtn);
 
@@ -101,79 +74,81 @@ function handleClick(e) {
     }
 }
 
-/* 💀 恐怖崩壞模式 */
+/* 💀 最終崩壞 */
 function breakGame() {
     isBroken = true;
     freeze = true;
 
-    let buttons = document.querySelectorAll("button");
+    title.innerText = "ERROR";
 
-    // 移除按鈕
-    buttons.forEach(btn => btn.remove());
+    // 顏色閃爍
+    setInterval(() => {
+        let colors = ["black", "red", "white"];
+        let bg = colors[Math.floor(Math.random()*colors.length)];
+        document.body.style.background = bg;
+        document.body.style.color = (bg === "white") ? "black" : "red";
+    }, 60);
 
-    document.body.style.background = "black";
-    document.body.style.color = "red";
+    // 旋轉 + 縮放
+    setInterval(() => {
+        document.body.style.transform =
+            "rotate(" + (Math.random()*360) + "deg) scale(" + (0.8 + Math.random()*0.6) + ")";
+    }, 120);
 
-    title.innerText = "...";
+    // 抖動
+    setInterval(() => {
+        document.body.style.transform +=
+            " translate("+(Math.random()*50-25)+"px,"+(Math.random()*50-25)+"px)";
+    }, 80);
 
-    let messages = [
-        "你為什麼還在點？",
-        "不是叫你不要點嗎",
-        "我有說可以停下來嗎？",
-        "我一直都在看著你",
-        "你剛剛點了第 32 次",
-        "現在…輪到我了"
-    ];
-
-    let i = 0;
-
-    let interval = setInterval(() => {
-        title.innerText = messages[i];
-        i++;
-
-        // 閃爍
-        document.body.style.background =
-            document.body.style.background === "black" ? "#200000" : "black";
-
-        if (i >= messages.length) {
-            clearInterval(interval);
-
-            setTimeout(() => {
-                title.innerText = "不要再點了";
-
-                // 抖動
-                setInterval(() => {
-                    document.body.style.transform =
-                        "translate(" +
-                        (Math.random() * 10 - 5) +
-                        "px," +
-                        (Math.random() * 10 - 5) +
-                        "px)";
-                }, 80);
-
-            }, 1000);
+    // 亂碼
+    setInterval(() => {
+        let chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&?!";
+        let text="";
+        for(let i=0;i<12;i++){
+            text+=chars[Math.floor(Math.random()*chars.length)];
         }
-    }, 1200);
+        title.innerText=text;
+    },100);
+
+    // 無限生成按鈕
+    setInterval(() => {
+        let btn=document.createElement("button");
+        btn.innerText="不要點";
+        btn.addEventListener("click", handleClick);
+
+        document.body.appendChild(btn);
+
+        btn.style.position="absolute";
+        btn.style.left=Math.random()*window.innerWidth+"px";
+        btn.style.top=Math.random()*window.innerHeight+"px";
+    },150);
+
+    // 滑鼠干擾
+    document.addEventListener("mousemove", (e)=>{
+        document.body.style.transform =
+            "rotate("+(e.clientX%360)+"deg) scale("+(1+(e.clientY%100)/300)+")";
+    });
 }
 
 /* 初始按鈕 */
-let firstBtn = document.getElementById("btn");
+let firstBtn=document.getElementById("btn");
 firstBtn.addEventListener("click", handleClick);
 move(firstBtn);
 
-/* 滑鼠靠近 */
-document.addEventListener("mousemove", (e) => {
-    if (!canMove || count < 3 || freeze) return;
+/* 滑鼠躲避 */
+document.addEventListener("mousemove",(e)=>{
+    if(!canMove||count<3||freeze)return;
 
-    let buttons = document.querySelectorAll("button");
+    let buttons=document.querySelectorAll("button");
 
-    buttons.forEach(btn => {
-        let rect = btn.getBoundingClientRect();
-        let dx = e.clientX - (rect.left + rect.width / 2);
-        let dy = e.clientY - (rect.top + rect.height / 2);
-        let dist = Math.sqrt(dx * dx + dy * dy);
+    buttons.forEach(btn=>{
+        let rect=btn.getBoundingClientRect();
+        let dx=e.clientX-(rect.left+rect.width/2);
+        let dy=e.clientY-(rect.top+rect.height/2);
+        let dist=Math.sqrt(dx*dx+dy*dy);
 
-        if (dist < 120) {
+        if(dist<120){
             move(btn);
         }
     });
