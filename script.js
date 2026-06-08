@@ -5,9 +5,30 @@ let title = document.getElementById("title");
 let sound = document.getElementById("clickSound");
 
 let count = 0;
-let canMove = false; // 控制是否可以開始躲
+let canMove = false;
 
-/* 初始位置 */
+/* 每階段延遲（ms） */
+function getDelay() {
+    if (count <= 3) return 1000;
+    if (count === 4) return 800;
+    if (count === 5) return 600;
+    if (count === 6) return 400;
+    if (count === 7) return 300;
+    return 200; // 最低不會變0
+}
+
+/* 控制「暫時不逃」 */
+function pauseMove() {
+    canMove = false;
+
+    let delay = getDelay();
+
+    setTimeout(() => {
+        canMove = true;
+    }, delay);
+}
+
+/* 隨機移動 */
 function move() {
     let x = Math.random() * (window.innerWidth - 150);
     let y = Math.random() * (window.innerHeight - 100);
@@ -17,20 +38,19 @@ function move() {
 
 move();
 
-/* 滑鼠靠近才逃跑 */
+/* 滑鼠靠近才逃 */
 document.addEventListener("mousemove", (e) => {
     let rect = btn.getBoundingClientRect();
     let dx = e.clientX - (rect.left + rect.width / 2);
     let dy = e.clientY - (rect.top + rect.height / 2);
     let dist = Math.sqrt(dx * dx + dy * dy);
 
-    // ✅ 加上 canMove 控制
     if (dist < 120 && count >= 3 && canMove) {
         move();
     }
 });
 
-/* 點擊事件 */
+/* 點擊 */
 btn.addEventListener("click", () => {
     count++;
 
@@ -42,6 +62,11 @@ btn.addEventListener("click", () => {
         document.body.classList.remove("shake");
     }, 300);
 
+    // 👉 每次點擊都給「短暫安全時間」
+    if (count >= 3) {
+        pauseMove();
+    }
+
     if (count === 1) {
         title.innerText = "欸？不是說不要點嗎 😑";
     }
@@ -50,33 +75,25 @@ btn.addEventListener("click", () => {
         move();
     }
     else if (count === 3) {
-        title.innerText = "好，那我開始躲了（給你1秒 😏）";
-
-        canMove = false; // 先關閉
-
-        // ✅ 延遲1秒再開始躲
-        setTimeout(() => {
-            canMove = true;
-        }, 1000);
-
+        title.innerText = "好，我開始躲，但我還會讓你一下 😏";
         move();
     }
     else if (count === 4) {
-        title.innerText = "抓不到吧 😆";
+        title.innerText = "機會變少了喔 👀";
         move();
     }
     else if (count === 5) {
-        title.innerText = "你是不是很閒 🤡";
+        title.innerText = "你快點不到了吧 🤡";
         document.body.style.background = "#3a1c1c";
         move();
     }
     else if (count === 6) {
-        title.innerText = "我開始認真了 😡";
+        title.innerText = "開始變難了 😈";
         btn.style.transform = "scale(1.3)";
         move();
     }
     else if (count === 7) {
-        title.innerText = "最後警告 ⚠️";
+        title.innerText = "最後機會們 ⚠️";
         move();
     }
     else if (count === 8) {
