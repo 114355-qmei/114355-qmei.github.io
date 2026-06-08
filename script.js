@@ -86,7 +86,7 @@ function handleClick(e) {
     else if (count >= 9) {
         title.innerText = "停不下來了吧 😂";
 
-        freeze = true; // 不再躲
+        freeze = true;
 
         let newBtn = btn.cloneNode(true);
         newBtn.addEventListener("click", handleClick);
@@ -94,7 +94,6 @@ function handleClick(e) {
         document.body.appendChild(newBtn);
         move(newBtn);
 
-        // ✅ 檢查是否達到 32 顆
         let totalBtns = document.querySelectorAll("button").length;
         if (totalBtns >= 32 && !isBroken) {
             breakGame();
@@ -102,39 +101,59 @@ function handleClick(e) {
     }
 }
 
-/* 崩壞模式 💀 */
+/* 💀 恐怖崩壞模式 */
 function breakGame() {
     isBroken = true;
+    freeze = true;
 
-    title.innerText = "系統錯誤…正在崩壞…";
-
-    // 畫面旋轉抖動
-    setInterval(() => {
-        document.body.style.transform =
-            "rotate(" + (Math.random() * 10 - 5) + "deg) scale(" + (1 + Math.random() * 0.2) + ")";
-    }, 100);
-
-    // 背景閃爍
-    setInterval(() => {
-        document.body.style.background =
-            Math.random() > 0.5 ? "black" : "red";
-    }, 80);
-
-    // 按鈕亂飛
     let buttons = document.querySelectorAll("button");
-    buttons.forEach(btn => {
-        setInterval(() => {
-            let x = Math.random() * window.innerWidth;
-            let y = Math.random() * window.innerHeight;
-            btn.style.left = x + "px";
-            btn.style.top = y + "px";
-        }, 200);
-    });
 
-    // 最終文字
-    setTimeout(() => {
-        title.innerText = "你把網站玩壞了 💀";
-    }, 3000);
+    // 移除按鈕
+    buttons.forEach(btn => btn.remove());
+
+    document.body.style.background = "black";
+    document.body.style.color = "red";
+
+    title.innerText = "...";
+
+    let messages = [
+        "你為什麼還在點？",
+        "不是叫你不要點嗎",
+        "我有說可以停下來嗎？",
+        "我一直都在看著你",
+        "你剛剛點了第 32 次",
+        "現在…輪到我了"
+    ];
+
+    let i = 0;
+
+    let interval = setInterval(() => {
+        title.innerText = messages[i];
+        i++;
+
+        // 閃爍
+        document.body.style.background =
+            document.body.style.background === "black" ? "#200000" : "black";
+
+        if (i >= messages.length) {
+            clearInterval(interval);
+
+            setTimeout(() => {
+                title.innerText = "不要再點了";
+
+                // 抖動
+                setInterval(() => {
+                    document.body.style.transform =
+                        "translate(" +
+                        (Math.random() * 10 - 5) +
+                        "px," +
+                        (Math.random() * 10 - 5) +
+                        "px)";
+                }, 80);
+
+            }, 1000);
+        }
+    }, 1200);
 }
 
 /* 初始按鈕 */
